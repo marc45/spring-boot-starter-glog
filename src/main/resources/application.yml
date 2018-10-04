@@ -2,11 +2,11 @@ server:
   port: 8080
 
 spring:
+  # 项目名
   application.name: glog
+  # 环境 -- 可选 dev/test/prod 分别对应 开发环境/测试环境/生产环境
   profiles.active: dev
 
-#pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [${glog.envCN} ${server.port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50} %caller{1} - %msg%n"
-#pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [${glog.envCN} ${server.port}] [%X{trace}] [%X{moduleName}] - %-5level - %caller{1} - %msg%n"
 glog:
   # 是否开启插件
   enable: false
@@ -16,26 +16,29 @@ glog:
   level: debug
   # 环境中文名
   envCN: 开发环境
-  # 控制台配置
+  # 控制台配置 %caller{1}
   stdout:
+    # 日志打印格式
     pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [${glog.envCN} ${server.port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50}.%L - %msg%n"
   # 日志文件配置
   file:
     # 日志存放目录
     logDir: C:/logs
+    # 日志打印格式
     pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [${glog.envCN} ${server.port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50}.%L - %msg%n"
-  # 邮件配置
+  # 邮件配置 -- 目前配置error级别发送邮件
   email:
+    # 日志打印格式
     pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS}%X{trace}%X{moduleName}%-5level%logger{50}%L%msg"
     # SMTP server的地址，必需指定
     smtpHost: smtp.exmail.qq.com
     # SMTP server的端口地址
     smtpPort: 465
     # 发送邮件账号
-    username: qmqb@hzed.com
+    username: xxx@qq.com
     # 发送邮件密码
-    password: hUd5NXkNC6pS9abY
+    password: xxxxxxxxxx
     # 指定发送到那个邮箱，设置多个用","分隔
-    emailTo: 123@qq.com
-    # 指定email的标题
-    subject: 【项目名-${glog.envCN}-${server.port}-报错】
+    emailTo: xxx@qq.com
+    # 指定email的标题 -- 可修改
+    subject: 【${spring.application.name}-${glog.envCN}-${server.port}-报错】

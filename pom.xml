@@ -114,7 +114,9 @@
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.8.1</version>
                 <configuration>
-                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/maven-repository</altDeploymentRepository>
+                    <altDeploymentRepository>
+                        internal.repo::default::file://${project.build.directory}/maven-repository
+                    </altDeploymentRepository>
                 </configuration>
             </plugin>
             <plugin>
@@ -125,7 +127,7 @@
                     <message>Maven artifacts for ${project.version}</message>
                     <noJekyll>true</noJekyll>
                     <outputDirectory>${project.build.directory}/maven-repository</outputDirectory>
-                    <branch>refs/heads/master</branch>
+                    <branch>refs/heads/glog</branch>
                     <includes>
                         <include>**/*</include>
                     </includes>
