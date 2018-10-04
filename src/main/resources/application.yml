@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application.name: glog
+  profiles.active: dev
+
+#pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [${glog.envCN} ${server.port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50} %caller{1} - %msg%n"
+#pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [${glog.envCN} ${server.port}] [%X{trace}] [%X{moduleName}] - %-5level - %caller{1} - %msg%n"
+glog:
+  # 是否开启插件
+  enable: false
+  # 是否开启ModuleLog拦截
+  aspect: false
+  # 日志级别
+  level: debug
+  # 环境中文名
+  envCN: 开发环境
+  # 控制台配置
+  stdout:
+    pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [${glog.envCN} ${server.port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50}.%L - %msg%n"
+  # 日志文件配置
+  file:
+    # 日志存放目录
+    logDir: C:/logs
+    pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS} [${glog.envCN} ${server.port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50}.%L - %msg%n"
+  # 邮件配置
+  email:
+    pattern: "%d{yyyy-MM-dd HH:mm:ss.SSS}%X{trace}%X{moduleName}%-5level%logger{50}%L%msg"
+    # SMTP server的地址，必需指定
+    smtpHost: smtp.exmail.qq.com
+    # SMTP server的端口地址
+    smtpPort: 465
+    # 发送邮件账号
+    username: qmqb@hzed.com
+    # 发送邮件密码
+    password: hUd5NXkNC6pS9abY
+    # 指定发送到那个邮箱，设置多个用","分隔
+    emailTo: 123@qq.com
+    # 指定email的标题
+    subject: 【项目名-${glog.envCN}-${server.port}-报错】

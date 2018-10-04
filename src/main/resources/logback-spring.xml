@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <!--配置spring环境变量-->
+    <springProperty scope="context" name="port" source="server.port"/>
+    <springProperty scope="context" name="level" source="glog.level"/>
+
+    <springProperty scope="context" name="stdout_pattern" source="glog.stdout.pattern"/>
+
+    <springProperty scope="context" name="logDir" source="glog.file.logDir"/>
+    <springProperty scope="context" name="file_pattern" source="glog.file.pattern"/>
+
+    <springProperty scope="context" name="email_pattern" source="glog.email.pattern"/>
+    <springProperty scope="context" name="smtpHost" source="glog.email.smtpHost"/>
+    <springProperty scope="context" name="smtpPort" source="glog.email.smtpPort"/>
+    <springProperty scope="context" name="username" source="glog.email.username"/>
+    <springProperty scope="context" name="password" source="glog.email.password"/>
+    <springProperty scope="context" name="emailTo" source="glog.email.emailTo"/>
+    <springProperty scope="context" name="subject" source="glog.email.subject"/>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${stdout_pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天30M生成日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--最新日志文件输出的文件名-->
+        <file>${logDir}/${port}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logDir}/%d{yyyy-MM-dd}/%i.${port}.log</fileNamePattern>
+            <!-- 单文件最大大小 -->
+            <maxFileSize>50MB</maxFileSize>
+            <!-- 日志文件保存周期 -->
+            <maxHistory>365</maxHistory>
+            <!-- 日志文件存储内存空间 -->
+            <totalSizeCap>30GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${file_pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ERROR邮件发送配置 -->
+    <appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+        <!-- SMTP server的地址，必需指定。 -->
+        <smtpHost>${smtpHost}</smtpHost>
+        <!-- SMTP server的端口地址。-->
+        <smtpPort>${smtpPort}</smtpPort>
+        <!-- 发送邮件账号 -->
+        <username>${username}</username>
+        <!-- 发送邮件密码 -->
+        <password>${password}</password>
+        <!-- 如果设置为true，appender将会使用SSL连接到日志服务器。默认值：false -->
+        <SSL>true</SSL>
+        <!-- 指定发送到那个邮箱，设置多个用","分隔 -->
+        <to>${emailTo}</to>
+        <!-- 必须与发送邮件账号一致 -->
+        <from>${username}</from>
+        <!-- 指定email的标题，它需要满足PatternLayout中的格式要求。默认值："%{logger20} - %m". -->
+        <subject>${subject}</subject>
+        <!-- 异步发送 -->
+        <asynchronousSending>true</asynchronousSending>
+        <!-- html格式-->
+        <layout class="com.guichang.starter.glog.logback.MyHtmlLayout">
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}%X{trace}%X{moduleName}%-5level%logger{50}%msg</pattern>-->
+            <pattern>${email_pattern}</pattern>
+        </layout>
+        <!-- 这里采用等级过滤器 指定等级相符才发送 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
+            <!-- 每个电子邮件只发送一个日志条目 -->
+            <bufferSize>1</bufferSize>
+        </cyclicBufferTracker>
+    </appender>
+
+    <!-- 环境输出日志类型 关联 spring.profiles.active -->
+    <springProfile name="dev">
+        <root level="${level}">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="${level}">
+            <appender-ref ref="FILE"/>
+            <!--<appender-ref ref="EMAIL"/>-->
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="${level}">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="EMAIL"/>
+        </root>
+    </springProfile>
+
+</configuration>
