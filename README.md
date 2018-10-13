@@ -6,7 +6,7 @@
 ```xml
 <repositories>
     <repository>
-        <id>maven-repository-master</id>
+        <id>maven-repository-glog</id>
         <url>https://raw.github.com/changgui/maven-repository/glog</url>
     </repository>
 </repositories>
